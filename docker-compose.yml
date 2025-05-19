@@ -48,8 +48,8 @@ services:
     ports:
       - "8083:80"
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: 33
+      PGID: 33
     volumes:
       - wordpress_data:/srv
       - filebrowser_config:/config
