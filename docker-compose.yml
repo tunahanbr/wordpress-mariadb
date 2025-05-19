@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    ports:
+      - "8081:80"
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: verystrongdbpassword1!
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini  # Custom php.ini
+    networks:
+      - wordpress_network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: verystrongdbpassword1!
+      MYSQL_DATABASE: wordpress
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+
+  phpmyadmin:
+    image: arm64v8/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: verystrongdbpassword1!
+    ports:
+      - "8082:80"
+    networks:
+      - wordpress_network
+
+volumes:
+  wordpress_data:
+  mariadb_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
