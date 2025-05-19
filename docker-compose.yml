@@ -40,9 +40,27 @@ services:
     networks:
       - wordpress_network
 
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    depends_on:
+      - wordpress
+    ports:
+      - "8083:80"
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - wordpress_data:/srv
+      - filebrowser_config:/config
+    networks:
+      - wordpress_network
+    restart: unless-stopped
+
 volumes:
   wordpress_data:
   mariadb_data:
+  filebrowser_config:
 
 networks:
   wordpress_network:
